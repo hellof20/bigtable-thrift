@@ -1,8 +1,12 @@
 # bigtable-thrift
 
-ubuntu 22.04
+## Prerequirement
+- Ubuntu 22.04 VM
+- GCP VM with service account， have permission to access Bigtable
+- Bigtable instance
 
-## deploy hbase thrift server
+## Deploy Hbase compatible with Bigtable
+### Install Hbase
 ```
 sudo apt update
 sudo apt install unzip openjdk-8-jdk-headless -y
@@ -18,7 +22,7 @@ gsutil cp gs://pwm-lowa/bigtable-hbase-1.x-1.14.1.zip .
 unzip bigtable-hbase-1.x-1.14.1.zip
 ```
 
-## modify conf/hbase-site.xml
+### Modify conf/hbase-site.xml
 
 ```
 <configuration>
@@ -31,12 +35,20 @@ unzip bigtable-hbase-1.x-1.14.1.zip
 </configuration>
 ```
 
-## modify conf/hbase-env.sh
+### Modify conf/hbase-env.sh
 ```
 export HBASE_CLASSPATH="lib/bigtable/*"
 ```
 
-## install thrift
+## Test with native hbase shell
+<img width="1710" alt="image" src="https://user-images.githubusercontent.com/8756642/216880206-4bc1fd5a-34ae-4594-a711-2aa8aa1f2dca.png">
+
+## Test with golang
+### Start Hbase Thrift server
+```
+bin/hbase thrift2 start
+```
+### Install Thrift
 ```
 sudo apt-get install automake bison flex g++ git libboost-all-dev libevent-dev libssl-dev libtool make pkg-config -y
 wget http://archive.apache.org/dist/thrift/0.13.0/thrift-0.13.0.tar.gz
@@ -47,11 +59,20 @@ make
 sudo make install
 ```
 
-## test with go applicaion
+### prepare golang applicaion
+- Install golang
 ```
 sudo apt install golang -y
 cd go-thrif2
 thrift -gen go hbase.thrift
 sudo cp -r gen-go/hbase /usr/lib/go-1.18/src/
+```
+- Modify main.go
+Change 'HOST' to your VM IP address
+
+- Test it
+```
 go run main.go
 ```
+<img width="836" alt="image" src="https://user-images.githubusercontent.com/8756642/216880488-3e175cca-d9b3-4ecf-9532-12b2f7a96d92.png">
+
