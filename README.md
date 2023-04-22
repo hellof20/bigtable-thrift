@@ -1,4 +1,4 @@
-# Bigtable-thrift
+# Bigtable-Thrift
 
 ## Prerequirement
 - Ubuntu 22.04 VM
