@@ -52,13 +52,20 @@ export JAVA_HOME=$(update-alternatives --list java | tail -1 | sed -E 's/\/bin\/
 ```
 
 ## Test with native hbase shell
-<img width="1710" alt="image" src="https://user-images.githubusercontent.com/8756642/216880206-4bc1fd5a-34ae-4594-a711-2aa8aa1f2dca.png">
+```
+bin/hbase shell
+```
+![image](https://github.com/user-attachments/assets/947ff6c8-ef46-440b-afa0-e41ad8da7d3c)
 
-## Test with golang
-### Start Hbase Thrift server
+![image](https://github.com/user-attachments/assets/b315b682-9376-419b-a148-7e68b483d9c9)
+
+
+## Start Hbase Thrift server
 ```
 bin/hbase thrift2 start
 ```
+
+## Test with golang
 ### Install Thrift
 ```
 sudo apt-get install automake bison flex g++ git libboost-all-dev libevent-dev libssl-dev libtool make pkg-config -y
