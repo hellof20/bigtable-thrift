@@ -1,36 +1,46 @@
 # Bigtable-Thrift
 
 ## Prerequirement
+注意: HBase的版本和Thrift的版本
 - Ubuntu 22.04 VM
 - GCP VM with service account， have permission to access Bigtable
 - Bigtable instance
 
-## Deploy Hbase compatible with Bigtable
-### Install Hbase
+## Deploy HBase compatible with Bigtable
+### Install HBase
 ```
 sudo apt update
-sudo apt install unzip openjdk-8-jdk-headless -y
-export JAVA_HOME=$(update-alternatives --list java | tail -1 | sed -E 's/\/bin\/java//')
-wget https://archive.apache.org/dist/hbase/1.4.3/hbase-1.4.3-bin.tar.gz
-tar -zxvf hbase-1.4.3-bin.tar.gz
-cd hbase-1.4.3
-rm -rf lib/guava-12.0.1.jar
-rm -rf lib/protobuf-java-2.5.0.jar
+sudo apt install unzip openjdk-8-jdk-headless maven -y
+wget https://archive.apache.org/dist/hbase/2.2.1/hbase-2.2.1-bin.tar.gz
+tar -zxvf hbase-2.2.1-bin.tar.gz
+```
+
+### Bigtable HBase dependencies
+```
+cd hbase-2.2.1
 mkdir -p lib/bigtable
 cd lib/bigtable
-gsutil cp gs://pwm-lowa/bigtable-hbase-1.x-1.14.1.zip .
-unzip bigtable-hbase-1.x-1.14.1.zip
+```
+将pom.xml放到lib/bigtable下
+```
+mvn dependency:go-offline dependency:copy-dependencies -DoutputDirectory=.
 ```
 
 ### Modify conf/hbase-site.xml
 
 ```
 <configuration>
-  <property><name>google.bigtable.project.id</name><value>speedy-victory-336109</value></property>
-  <property><name>google.bigtable.instance.id</name><value>bigtable1</value></property>
+  <property>
+    <name>google.bigtable.project.id</name>
+    <value>speedy-victory-336109</value>
+  </property>
+  <property>
+    <name>google.bigtable.instance.id</name>
+    <value>bigtable1</value>
+  </property>
   <property>
     <name>hbase.client.connection.impl</name>
-    <value>com.google.cloud.bigtable.hbase1_x.BigtableConnection</value>
+    <value>com.google.cloud.bigtable.hbase2_x.BigtableConnection</value>
   </property>
 </configuration>
 ```
@@ -38,6 +48,7 @@ unzip bigtable-hbase-1.x-1.14.1.zip
 ### Modify conf/hbase-env.sh
 ```
 export HBASE_CLASSPATH="lib/bigtable/*"
+export JAVA_HOME=$(update-alternatives --list java | tail -1 | sed -E 's/\/bin\/java//')
 ```
 
 ## Test with native hbase shell
